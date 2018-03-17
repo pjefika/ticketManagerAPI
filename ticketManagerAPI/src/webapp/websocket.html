@@ -1,0 +1,35 @@
+
+
+<html>
+	<input id="textarea" type="textarea"></input>
+	<input type="submit" onClick="websocket.send(document.getElementById('textarea').value);"></input>
+	<div id="output"></div>
+</html>
+
+
+<script>
+	var websocket = new WebSocket("ws://localhost:7171/ticketEndpoint");
+	var output = document.getElementById("output");
+	
+	websocket.onopen = function(evt) { onOpen(evt) };
+	websocket.onerror = function(evt) { onError(evt) };
+	websocket.onmessage = function(evt) { onMessage(evt) };
+
+	function onOpen() {
+		writeToScreen("Connected!");
+	}
+	
+	function writeToScreen(message) {
+		output.innerHTML += message + "<br>";
+	}
+
+	function onError(evt) {
+		writeToScreen('<span style="color: red;">ERROR:</span> ' + JSON.stringify(evt));
+	}
+	
+	function onMessage(evt) {
+		output.innerHTML += evt.data + "<br>";
+		console.log("received: " + evt.data);
+	}
+	
+</script>
